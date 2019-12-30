@@ -1,0 +1,19 @@
+package {beanPackageName};
+
+import com.lbx.base.model.base.sys.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+{import}
+
+/**
+ * {beanComment}
+ * @author Automatic builder
+ *
+ */
+@ApiModel(value="{beanComment}")
+public class {beanName} extends BaseEntity<Long> {
+
+    private static final long serialVersionUID = 1L;
+{filelds}
+{getset}
+}

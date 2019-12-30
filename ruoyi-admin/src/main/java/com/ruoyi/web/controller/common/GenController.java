@@ -1,4 +1,4 @@
-package com.ruoyi.generator.controller;
+package com.ruoyi.web.controller.common;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +26,7 @@ import com.ruoyi.generator.domain.GenTable;
 import com.ruoyi.generator.domain.GenTableColumn;
 import com.ruoyi.generator.service.IGenTableColumnService;
 import com.ruoyi.generator.service.IGenTableService;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 代码生成 操作处理
@@ -46,9 +47,10 @@ public class GenController extends BaseController
 
     @RequiresPermissions("tool:gen:view")
     @GetMapping()
-    public String gen()
+    public ModelAndView gen(ModelAndView modelAndView)
     {
-        return prefix + "/gen";
+        modelAndView.setViewName(prefix + "/gen");
+        return modelAndView;
     }
 
     /**
