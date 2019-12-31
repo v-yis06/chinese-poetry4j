@@ -195,6 +195,13 @@
 				<artifactId>ruoyi-system</artifactId>
 				<version>${ruoyi.version}</version>
 			</dependency>
+
+	        <!-- 诗词文章模块-->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-poetry</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 			
 			<!-- 通用工具-->
 	        <dependency>
@@ -213,7 +220,8 @@
 		<module>ruoyi-quartz</module>
 		<module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-    </modules>
+		<module>ruoyi-poetry</module>
+	</modules>
     <packaging>pom</packaging>
 
 

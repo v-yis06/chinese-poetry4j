@@ -73,6 +73,12 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- 诗词文章 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-poetry</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
