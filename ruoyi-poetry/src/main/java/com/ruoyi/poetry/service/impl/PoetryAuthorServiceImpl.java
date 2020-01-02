@@ -95,4 +95,9 @@ public class PoetryAuthorServiceImpl implements IPoetryAuthorService
     {
         return poetryAuthorMapper.deletePoetryAuthorById(id);
     }
+
+    @Override
+    public int batchInsertPoetryAuthor(List<PoetryAuthor> poetryAuthors) {
+        return poetryAuthorMapper.batchInsertPoetryAuthor(poetryAuthors);
+    }
 }

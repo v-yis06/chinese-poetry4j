@@ -53,6 +53,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="batchInsertPoetryAuthor" parameterType="List">
+        insert into poetry_author
+        (name, description, create_time)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.name}, #{item.description}, SYSDATE())
+        </foreach>
+    </insert>
+
     <update id="updatePoetryAuthor" parameterType="PoetryAuthor">
         update poetry_author
         <trim prefix="SET" suffixOverrides=",">

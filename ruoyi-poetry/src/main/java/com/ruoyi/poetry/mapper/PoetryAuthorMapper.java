@@ -59,4 +59,6 @@ public interface PoetryAuthorMapper
      * @return 结果
      */
     public int deletePoetryAuthorByIds(String[] ids);
+
+    public int batchInsertPoetryAuthor(List<PoetryAuthor> list);
 }

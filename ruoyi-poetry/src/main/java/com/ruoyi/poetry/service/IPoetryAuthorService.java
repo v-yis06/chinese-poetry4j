@@ -59,4 +59,12 @@ public interface IPoetryAuthorService
      * @return 结果
      */
     public int deletePoetryAuthorById(String id);
+
+    /**
+     * 新增作者
+     *
+     * @param poetryAuthors 作者
+     * @return 结果
+     */
+    public int batchInsertPoetryAuthor(List<PoetryAuthor> poetryAuthors);
 }
