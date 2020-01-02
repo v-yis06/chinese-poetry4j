@@ -1,5 +1,6 @@
 package com.ruoyi.poetry.service;
 
+import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.poetry.domain.PoetryArticle;
 
 import java.util.List;
@@ -7,8 +8,8 @@ import java.util.List;
 /**
  * 诗词文章Service接口
  * 
- * @author ruoyi
- * @date 2019-12-31
+ * @author yisheng
+ * @date 2020-01-02
  */
 public interface IPoetryArticleService 
 {
@@ -18,7 +19,7 @@ public interface IPoetryArticleService
      * @param id 诗词文章ID
      * @return 诗词文章
      */
-    public PoetryArticle selectPoetryArticleById(String id);
+    public PoetryArticle selectPoetryArticleById(Long id);
 
     /**
      * 查询诗词文章列表
@@ -58,5 +59,12 @@ public interface IPoetryArticleService
      * @param id 诗词文章ID
      * @return 结果
      */
-    public int deletePoetryArticleById(String id);
+    public int deletePoetryArticleById(Long id);
+
+    /**
+     * 查询诗词文章树列表
+     * 
+     * @return 所有诗词文章信息
+     */
+    public List<Ztree> selectPoetryArticleTree();
 }

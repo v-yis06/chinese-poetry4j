@@ -1,14 +1,13 @@
 package com.ruoyi.poetry.mapper;
 
 import com.ruoyi.poetry.domain.PoetryArticle;
-
 import java.util.List;
 
 /**
  * 诗词文章Mapper接口
  * 
- * @author ruoyi
- * @date 2019-12-31
+ * @author yisheng
+ * @date 2020-01-02
  */
 public interface PoetryArticleMapper 
 {
@@ -18,7 +17,7 @@ public interface PoetryArticleMapper
      * @param id 诗词文章ID
      * @return 诗词文章
      */
-    public PoetryArticle selectPoetryArticleById(String id);
+    public PoetryArticle selectPoetryArticleById(Long id);
 
     /**
      * 查询诗词文章列表
@@ -50,7 +49,7 @@ public interface PoetryArticleMapper
      * @param id 诗词文章ID
      * @return 结果
      */
-    public int deletePoetryArticleById(String id);
+    public int deletePoetryArticleById(Long id);
 
     /**
      * 批量删除诗词文章

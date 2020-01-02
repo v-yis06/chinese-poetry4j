@@ -6,54 +6,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="PoetryArticle" id="PoetryArticleResult">
         <result property="id"    column="id"    />
-        <result property="title"    column="title"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="content"    column="content"    />
+        <result property="orderNum"    column="order_num"    />
         <result property="author"    column="author"    />
-        <result property="paragraphs"    column="paragraphs"    />
-        <result property="paragraphOrder"    column="paragraph_order"    />
+        <result property="type"    column="type"    />
+        <result property="remark"    column="remark"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
+        <result property="parentName" column="parent_name" />
     </resultMap>
 
     <sql id="selectPoetryArticleVo">
-        select id, title, author, paragraphs, paragraph_order, create_time, create_by, update_time, update_by from poetry_article
+        select id, parent_id, content, order_num, author, type, remark, create_time, create_by, update_time, update_by from poetry_article
     </sql>
 
     <select id="selectPoetryArticleList" parameterType="PoetryArticle" resultMap="PoetryArticleResult">
         <include refid="selectPoetryArticleVo"/>
         <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="author != null  and author != ''"> and author = #{author}</if>
-            <if test="paragraphs != null  and paragraphs != ''"> and paragraphs = #{paragraphs}</if>
-            <if test="paragraphOrder != null "> and paragraph_order = #{paragraphOrder}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="params.beginOrderNum != null and params.beginOrderNum != '' and params.endOrderNum != null and params.endOrderNum != ''"> and order_num between #{params.beginOrderNum} and #{params.endOrderNum}</if>
+            <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
         </where>
+        order by parent_id
     </select>
     
-    <select id="selectPoetryArticleById" parameterType="String" resultMap="PoetryArticleResult">
-        <include refid="selectPoetryArticleVo"/>
-        where id = #{id}
+    <select id="selectPoetryArticleById" parameterType="Long" resultMap="PoetryArticleResult">
+        select t.id, t.parent_id, t.content, t.order_num, t.author, t.type, t.remark, t.create_time, t.create_by, t.update_time, t.update_by, p.content as parent_name
+        from poetry_article t
+        left join poetry_article p on p.id = t.parent_id
+        where t.id = #{id}
     </select>
         
-    <insert id="insertPoetryArticle" parameterType="PoetryArticle">
+    <insert id="insertPoetryArticle" parameterType="PoetryArticle" useGeneratedKeys="true" keyProperty="id">
         insert into poetry_article
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null  and id != ''">id,</if>
-            <if test="title != null  and title != ''">title,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="orderNum != null ">order_num,</if>
             <if test="author != null  and author != ''">author,</if>
-            <if test="paragraphs != null  and paragraphs != ''">paragraphs,</if>
-            <if test="paragraphOrder != null ">paragraph_order,</if>
+            <if test="type != null ">type,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="updateTime != null ">update_time,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null  and id != ''">#{id},</if>
-            <if test="title != null  and title != ''">#{title},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
             <if test="author != null  and author != ''">#{author},</if>
-            <if test="paragraphs != null  and paragraphs != ''">#{paragraphs},</if>
-            <if test="paragraphOrder != null ">#{paragraphOrder},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="updateTime != null ">#{updateTime},</if>
@@ -64,10 +73,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updatePoetryArticle" parameterType="PoetryArticle">
         update poetry_article
         <trim prefix="SET" suffixOverrides=",">
-            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
             <if test="author != null  and author != ''">author = #{author},</if>
-            <if test="paragraphs != null  and paragraphs != ''">paragraphs = #{paragraphs},</if>
-            <if test="paragraphOrder != null ">paragraph_order = #{paragraphOrder},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
@@ -76,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePoetryArticleById" parameterType="String">
+    <delete id="deletePoetryArticleById" parameterType="Long">
         delete from poetry_article where id = #{id}
     </delete>
 

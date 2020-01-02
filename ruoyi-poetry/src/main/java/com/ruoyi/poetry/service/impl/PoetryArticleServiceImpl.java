@@ -1,5 +1,6 @@
 package com.ruoyi.poetry.service.impl;
 
+import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.poetry.domain.PoetryArticle;
@@ -8,13 +9,14 @@ import com.ruoyi.poetry.service.IPoetryArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 诗词文章Service业务层处理
  * 
- * @author ruoyi
- * @date 2019-12-31
+ * @author yisheng
+ * @date 2020-01-02
  */
 @Service
 public class PoetryArticleServiceImpl implements IPoetryArticleService 
@@ -29,7 +31,7 @@ public class PoetryArticleServiceImpl implements IPoetryArticleService
      * @return 诗词文章
      */
     @Override
-    public PoetryArticle selectPoetryArticleById(String id)
+    public PoetryArticle selectPoetryArticleById(Long id)
     {
         return poetryArticleMapper.selectPoetryArticleById(id);
     }
@@ -91,8 +93,30 @@ public class PoetryArticleServiceImpl implements IPoetryArticleService
      * @return 结果
      */
     @Override
-    public int deletePoetryArticleById(String id)
+    public int deletePoetryArticleById(Long id)
     {
         return poetryArticleMapper.deletePoetryArticleById(id);
+    }
+
+    /**
+     * 查询诗词文章树列表
+     * 
+     * @return 所有诗词文章信息
+     */
+    @Override
+    public List<Ztree> selectPoetryArticleTree()
+    {
+        List<PoetryArticle> poetryArticleList = poetryArticleMapper.selectPoetryArticleList(new PoetryArticle());
+        List<Ztree> ztrees = new ArrayList<Ztree>();
+        for (PoetryArticle poetryArticle : poetryArticleList)
+        {
+            Ztree ztree = new Ztree();
+            ztree.setId(poetryArticle.getId());
+            ztree.setpId(poetryArticle.getParentId());
+            ztree.setName(poetryArticle.getContent());
+            ztree.setTitle(poetryArticle.getContent());
+            ztrees.add(ztree);
+        }
+        return ztrees;
     }
 }

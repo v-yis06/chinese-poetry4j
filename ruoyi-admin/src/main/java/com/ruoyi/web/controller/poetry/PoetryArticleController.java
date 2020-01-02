@@ -3,8 +3,9 @@ package com.ruoyi.web.controller.poetry;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.poetry.domain.PoetryArticle;
 import com.ruoyi.poetry.service.IPoetryArticleService;
@@ -19,8 +20,8 @@ import java.util.List;
 /**
  * 诗词文章Controller
  * 
- * @author ruoyi
- * @date 2019-12-31
+ * @author yisheng
+ * @date 2020-01-02
  */
 @Controller
 @RequestMapping("/poetry/article")
@@ -39,16 +40,15 @@ public class PoetryArticleController extends BaseController
     }
 
     /**
-     * 查询诗词文章列表
+     * 查询诗词文章树列表
      */
     @RequiresPermissions("poetry:article:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(PoetryArticle poetryArticle)
+    public List<PoetryArticle> list(PoetryArticle poetryArticle)
     {
-        startPage();
         List<PoetryArticle> list = poetryArticleService.selectPoetryArticleList(poetryArticle);
-        return getDataTable(list);
+        return list;
     }
 
     /**
@@ -67,9 +67,13 @@ public class PoetryArticleController extends BaseController
     /**
      * 新增诗词文章
      */
-    @GetMapping("/add")
-    public String add()
+    @GetMapping(value = { "/add/{id}", "/add/" })
+    public String add(@PathVariable(value = "id", required = false) Long id, ModelMap mmap)
     {
+        if (StringUtils.isNotNull(id))
+        {
+            mmap.put("poetryArticle", poetryArticleService.selectPoetryArticleById(id));
+        }
         return prefix + "/add";
     }
 
@@ -89,7 +93,7 @@ public class PoetryArticleController extends BaseController
      * 修改诗词文章
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") String id, ModelMap mmap)
+    public String edit(@PathVariable("id") Long id, ModelMap mmap)
     {
         PoetryArticle poetryArticle = poetryArticleService.selectPoetryArticleById(id);
         mmap.put("poetryArticle", poetryArticle);
@@ -109,14 +113,38 @@ public class PoetryArticleController extends BaseController
     }
 
     /**
-     * 删除诗词文章
+     * 删除
      */
     @RequiresPermissions("poetry:article:remove")
     @Log(title = "诗词文章", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @GetMapping("/remove/{id}")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@PathVariable("id") Long id)
     {
-        return toAjax(poetryArticleService.deletePoetryArticleByIds(ids));
+        return toAjax(poetryArticleService.deletePoetryArticleById(id));
+    }
+
+    /**
+     * 选择诗词文章树
+     */
+    @GetMapping(value = { "/selectArticleTree/{id}", "/selectArticleTree/" })
+    public String selectArticleTree(@PathVariable(value = "id", required = false) Long id, ModelMap mmap)
+    {
+        if (StringUtils.isNotNull(id))
+        {
+            mmap.put("poetryArticle", poetryArticleService.selectPoetryArticleById(id));
+        }
+        return prefix + "/tree";
+    }
+
+    /**
+     * 加载诗词文章树列表
+     */
+    @GetMapping("/treeData")
+    @ResponseBody
+    public List<Ztree> treeData()
+    {
+        List<Ztree> ztrees = poetryArticleService.selectPoetryArticleTree();
+        return ztrees;
     }
 }
