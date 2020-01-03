@@ -23,10 +23,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, parent_id, content, order_num, author, type, remark, create_time, create_by, update_time, update_by from poetry_article
     </sql>
 
-    <select id="selectPoetryArticleList" parameterType="PoetryArticle" resultMap="PoetryArticleResult">
+    <select id="selectPoetryArticleTreeList" parameterType="PoetryArticle" resultMap="PoetryArticleResult">
         <include refid="selectPoetryArticleVo"/>
         <where>  
-            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="parentId != null "> and (parent_id = #{parentId} or id = #{parentId})</if>
             <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
             <if test="params.beginOrderNum != null and params.beginOrderNum != '' and params.endOrderNum != null and params.endOrderNum != ''"> and order_num between #{params.beginOrderNum} and #{params.endOrderNum}</if>
             <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
@@ -34,7 +34,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by parent_id
     </select>
-    
+
+    <select id="selectPoetryArticleList" parameterType="PoetryArticle" resultMap="PoetryArticleResult">
+        <include refid="selectPoetryArticleVo"/>
+        <where>
+            and parent_id != 0
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="params.beginOrderNum != null and params.beginOrderNum != '' and params.endOrderNum != null and params.endOrderNum != ''"> and order_num between #{params.beginOrderNum} and #{params.endOrderNum}</if>
+            <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+
     <select id="selectPoetryArticleById" parameterType="Long" resultMap="PoetryArticleResult">
         select t.id, t.parent_id, t.content, t.order_num, t.author, t.type, t.remark, t.create_time, t.create_by, t.update_time, t.update_by, p.content as parent_name
         from poetry_article t
@@ -48,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertPoetryArticle" parameterType="PoetryArticle" useGeneratedKeys="true" keyProperty="id">
         insert into poetry_article
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
             <if test="parentId != null ">parent_id,</if>
             <if test="content != null  and content != ''">content,</if>
             <if test="orderNum != null ">order_num,</if>
@@ -60,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
             <if test="parentId != null ">#{parentId},</if>
             <if test="content != null  and content != ''">#{content},</if>
             <if test="orderNum != null ">#{orderNum},</if>

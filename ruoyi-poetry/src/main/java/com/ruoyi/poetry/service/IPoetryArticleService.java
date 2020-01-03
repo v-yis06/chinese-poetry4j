@@ -27,6 +27,14 @@ public interface IPoetryArticleService
      * @param poetryArticle 诗词文章
      * @return 诗词文章集合
      */
+    public List<PoetryArticle> selectPoetryArticleTreeList(PoetryArticle poetryArticle);
+
+    /**
+     * 查询诗词文章列表
+     *
+     * @param poetryArticle 诗词文章
+     * @return 诗词文章集合
+     */
     public List<PoetryArticle> selectPoetryArticleList(PoetryArticle poetryArticle);
 
     /**

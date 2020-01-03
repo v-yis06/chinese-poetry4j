@@ -2,7 +2,7 @@ package com.ruoyi.common.utils.file;
 
 import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +12,12 @@ import java.io.IOException;
  * @date 2020-01-02
  * @desc
  */
-public class JSONFileAuthor implements JSONFile{
+public class JSONFilePoetry extends FileUploadUtils{
 
-    public JSONArray readJsonData(String classPath) throws IOException {
-        ClassPathResource resource = new ClassPathResource(classPath);
-        File file = resource.getFile();
-        String jsonString = FileUtils.readFileToString(file,"utf-8");
+    public JSONArray readJsonData(MultipartFile file) throws IOException {
+        String filePath = upload(file);
+        System.out.println("filePath:"+filePath);
+        String jsonString = FileUtils.readFileToString(new File(filePath),"utf-8");
         jsonString = jsonString.replaceAll("id\":","id2\":");
         jsonString = jsonString.replaceAll("desc\":","description\":");
 

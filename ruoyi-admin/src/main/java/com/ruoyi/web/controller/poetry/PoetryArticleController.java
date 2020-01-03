@@ -7,10 +7,10 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.Ztree;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.file.JSONFile;
-import com.ruoyi.common.utils.file.JSONFileArticle;
+import com.ruoyi.common.utils.file.JSONFilePoetry;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.poetry.domain.PoetryArticle;
 import com.ruoyi.poetry.service.IPoetryArticleService;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,14 +51,59 @@ public class PoetryArticleController extends BaseController
     }
 
     /**
-     * 查询诗词文章树列表
+     * 查询诗词文章列表(分页)
      */
     @RequiresPermissions("poetry:article:list")
     @PostMapping("/list")
     @ResponseBody
-    public List<PoetryArticle> list(PoetryArticle poetryArticle)
+    public TableDataInfo list(PoetryArticle poetryArticle)
     {
+        startPage();
         List<PoetryArticle> list = poetryArticleService.selectPoetryArticleList(poetryArticle);
+        return getDataTable(list);
+    }
+
+    /**
+     * 删除诗词文章
+     */
+    @RequiresPermissions("poetry:article:remove")
+    @Log(title = "诗词文章", businessType = BusinessType.DELETE)
+    @PostMapping( "/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids)
+    {
+        return toAjax(poetryArticleService.deletePoetryArticleByIds(ids));
+    }
+
+
+    /**
+     * 查询字典详细
+     */
+    @RequiresPermissions("poetry:article:list")
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") Long id, ModelMap mmap)
+    {
+//        mmap.put("dict", dictTypeService.selectDictTypeById(dictId));
+//        mmap.put("dictList", dictTypeService.selectDictTypeAll());
+        PoetryArticle poetryArticle = poetryArticleService.selectPoetryArticleById(id);
+        Long parentId = poetryArticle.getParentId();
+        if(parentId!=null && parentId!=0L){
+            mmap.put("parentId",parentId);
+        }else {
+            mmap.put("parentId",id);
+        }
+        return prefix+"/tree/article";
+    }
+
+    /**
+     * 查询诗词文章树列表（不分页，树结构）
+     */
+    @RequiresPermissions("poetry:article:list")
+    @PostMapping("/list/tree")
+    @ResponseBody
+    public List<PoetryArticle> listTree(PoetryArticle poetryArticle)
+    {
+        List<PoetryArticle> list = poetryArticleService.selectPoetryArticleTreeList(poetryArticle);
         return list;
     }
 
@@ -69,7 +115,7 @@ public class PoetryArticleController extends BaseController
     @ResponseBody
     public AjaxResult export(PoetryArticle poetryArticle)
     {
-        List<PoetryArticle> list = poetryArticleService.selectPoetryArticleList(poetryArticle);
+        List<PoetryArticle> list = poetryArticleService.selectPoetryArticleTreeList(poetryArticle);
         ExcelUtil<PoetryArticle> util = new ExcelUtil<PoetryArticle>(PoetryArticle.class);
         return util.exportExcel(list, "article");
     }
@@ -162,20 +208,19 @@ public class PoetryArticleController extends BaseController
      * 导入诗词文章列表
      */
     @ApiOperation("导入唐诗json文件")
-    @RequiresPermissions("poetry:article:export")
+    @RequiresPermissions("poetry:article:import")
     @PostMapping("/articleImport")
     @ResponseBody
-    public AjaxResult articleImport(String classPath)
+    public AjaxResult articleImport(@RequestParam("file") MultipartFile multipartFile)
     {
         try {
-            JSONFile jsonFile = new JSONFileArticle();
-            JSONArray jsonArray = jsonFile.readJsonData(classPath);
+            JSONFilePoetry jsonFile = new JSONFilePoetry();
+            JSONArray jsonArray = jsonFile.readJsonData(multipartFile);
             // 获取最大主键值
             Long maxId = poetryArticleService.getMaxKeyId();
+            maxId = maxId==null ? 1 : maxId;
             Integer insertNum = 0;
-            //
             for (Object obj : jsonArray) {
-
                 try {
 
                     InsertCell insertCell = new InsertCell(maxId, insertNum, (Map) obj).invoke();
@@ -217,7 +262,7 @@ public class PoetryArticleController extends BaseController
             List<PoetryArticle> poetryArticles = Lists.newArrayList();
             PoetryArticle poetryArticle = new PoetryArticle();
             Map<String,Object> articleMap = o;
-            poetryArticle.setId(maxId);
+            poetryArticle.setId(++maxId);
             poetryArticle.setParentId(0L);
             poetryArticle.setAuthor((String) articleMap.get("author"));
             poetryArticle.setContent((String) articleMap.get("title"));
@@ -226,16 +271,18 @@ public class PoetryArticleController extends BaseController
 
             if(parentInsertNum>0){
                 insertNum++;
+                Long parentId = maxId.longValue();
+                Integer orderNo = 1;
                 JSONArray paragraphsArray = JSONArray.parseArray(JSONObject.toJSONString(articleMap.get("paragraphs")));
                 for (Object o2 : paragraphsArray) {
-                    poetryArticle.setId(null);
-                    poetryArticle.setParentId(maxId);
+                    poetryArticle.setId(++maxId);
+                    poetryArticle.setParentId(parentId);
                     poetryArticle.setContent(String.valueOf(o2));
+                    poetryArticle.setOrderNum(orderNo++);
                     poetryArticleService.insertPoetryArticle(poetryArticle);
                 }
             }
 
-            maxId++;
             return this;
         }
     }

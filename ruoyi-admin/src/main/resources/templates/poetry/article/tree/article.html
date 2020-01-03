@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('诗词文章列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>父ID：</p>
+                                <input type="text" name="parentId" th:value="*{parentId}"/>
+                            </li>
+                            <li>
+                                <p>段落：</p>
+                                <input type="text" name="content"/>
+                            </li>
+                            <li>
+                                <p>作者：</p>
+                                <input type="text" name="author"/>
+                            </li>
+                            <li>
+                                <p>分类：</p>
+                                <select name="type" th:with="type=${@dict.getType('poetry_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <button class="btn btn-success" type="button" id="articleImport" shiro:hasPermission="poetry:article:import">
+                    <i class="layui-icon">&#xe67c;</i>上传数据
+                </button>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var addFlag = [[${@permission.hasPermi('poetry:article:add')}]];
+        var editFlag = [[${@permission.hasPermi('poetry:article:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('poetry:article:remove')}]];
+    </script>
+    <script th:src="@{/js/poetry/articleTree.js}"></script>
+</body>
+</html>

@@ -43,8 +43,13 @@ public class PoetryArticleServiceImpl implements IPoetryArticleService
      * @return 诗词文章
      */
     @Override
-    public List<PoetryArticle> selectPoetryArticleList(PoetryArticle poetryArticle)
+    public List<PoetryArticle> selectPoetryArticleTreeList(PoetryArticle poetryArticle)
     {
+        return poetryArticleMapper.selectPoetryArticleTreeList(poetryArticle);
+    }
+
+    @Override
+    public List<PoetryArticle> selectPoetryArticleList(PoetryArticle poetryArticle) {
         return poetryArticleMapper.selectPoetryArticleList(poetryArticle);
     }
 
@@ -106,7 +111,7 @@ public class PoetryArticleServiceImpl implements IPoetryArticleService
     @Override
     public List<Ztree> selectPoetryArticleTree()
     {
-        List<PoetryArticle> poetryArticleList = poetryArticleMapper.selectPoetryArticleList(new PoetryArticle());
+        List<PoetryArticle> poetryArticleList = poetryArticleMapper.selectPoetryArticleTreeList(new PoetryArticle());
         List<Ztree> ztrees = new ArrayList<Ztree>();
         for (PoetryArticle poetryArticle : poetryArticleList)
         {

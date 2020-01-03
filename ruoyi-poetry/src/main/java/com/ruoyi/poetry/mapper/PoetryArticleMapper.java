@@ -1,6 +1,7 @@
 package com.ruoyi.poetry.mapper;
 
 import com.ruoyi.poetry.domain.PoetryArticle;
+
 import java.util.List;
 
 /**
@@ -22,6 +23,14 @@ public interface PoetryArticleMapper
     /**
      * 查询诗词文章列表
      * 
+     * @param poetryArticle 诗词文章
+     * @return 诗词文章集合
+     */
+    public List<PoetryArticle> selectPoetryArticleTreeList(PoetryArticle poetryArticle);
+
+    /**
+     * 查询诗词文章列表
+     *
      * @param poetryArticle 诗词文章
      * @return 诗词文章集合
      */
@@ -59,5 +68,5 @@ public interface PoetryArticleMapper
      */
     public int deletePoetryArticleByIds(String[] ids);
 
-    Long getMaxKeyId();
+    public Long getMaxKeyId();
 }

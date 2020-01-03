@@ -6,17 +6,18 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.file.JSONFile;
-import com.ruoyi.common.utils.file.JSONFileAuthor;
+import com.ruoyi.common.utils.file.JSONFilePoetry;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.poetry.domain.PoetryAuthor;
 import com.ruoyi.poetry.service.IPoetryAuthorService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +33,9 @@ import java.util.List;
 public class PoetryAuthorController extends BaseController
 {
     private String prefix = "poetry/author";
+
+    @Value("${ruoyi.profile}")
+    private String baseLocation;
 
     @Autowired
     private IPoetryAuthorService poetryAuthorService;
@@ -129,14 +133,16 @@ public class PoetryAuthorController extends BaseController
      * 导入诗词文章列表
      */
     @ApiOperation("导入作者json文件")
-    @RequiresPermissions("poetry:author:export")
+    @RequiresPermissions("poetry:author:import")
     @PostMapping("/authorImport")
     @ResponseBody
-    public AjaxResult authorImport(String classPath)
+    public AjaxResult authorImport(@RequestParam("file") MultipartFile multipartFile)
     {
         try {
-            JSONFile jsonFile = new JSONFileAuthor();
-            JSONArray jsonArray = jsonFile.readJsonData(classPath);
+
+            // 将文件缓存到服务器，然后获取解析
+            JSONFilePoetry jsonFilePoetry = new JSONFilePoetry();
+            JSONArray jsonArray = jsonFilePoetry.readJsonData(multipartFile);
             List<PoetryAuthor> poetryAuthors = jsonArray.toJavaList(PoetryAuthor.class);
             // 说明：json文件部分字符存在乱码问题
 //            int num = poetryAuthorService.batchInsertPoetryAuthor(poetryAuthors);
