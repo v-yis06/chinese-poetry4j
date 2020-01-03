@@ -7,6 +7,7 @@
 
     $.fn.bootstrapTreeTable = function(options, param) {
         var target = $(this).data('bootstrap.tree.table');
+        var isFirstLoad = true;
         target = target ? target : $(this);
         // 如果是调用方法
         if (typeof options == 'string') {
@@ -151,6 +152,11 @@
         }
         // 初始化数据服务
         var initServer = function(parms) {
+            // 支持第一次初始化表格不刷数据
+            if (!options.firstLoad && isFirstLoad) {
+                isFirstLoad = false;
+                return
+            }
             // 加载数据前先清空
             target.data_list = {};
             target.data_obj = {};
