@@ -67,4 +67,10 @@ public interface IPoetryArticleService
      * @return 所有诗词文章信息
      */
     public List<Ztree> selectPoetryArticleTree();
+
+    /**
+     * 获取主键最大值
+     * @return
+     */
+    public Long getMaxKeyId();
 }

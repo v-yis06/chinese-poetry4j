@@ -58,4 +58,6 @@ public interface PoetryArticleMapper
      * @return 结果
      */
     public int deletePoetryArticleByIds(String[] ids);
+
+    Long getMaxKeyId();
 }

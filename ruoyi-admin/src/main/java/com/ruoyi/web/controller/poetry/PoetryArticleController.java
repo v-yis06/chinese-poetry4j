@@ -170,8 +170,8 @@ public class PoetryArticleController extends BaseController
         try {
             JSONFile jsonFile = new JSONFileArticle();
             JSONArray jsonArray = jsonFile.readJsonData(classPath);
-            // TODO：从数据库获取最大主键值
-            Long maxId = 10L;
+            // 获取最大主键值
+            Long maxId = poetryArticleService.getMaxKeyId();
             Integer insertNum = 0;
             //
             for (Object obj : jsonArray) {

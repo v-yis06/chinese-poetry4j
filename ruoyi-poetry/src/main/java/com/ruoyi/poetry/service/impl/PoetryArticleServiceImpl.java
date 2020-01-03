@@ -119,4 +119,9 @@ public class PoetryArticleServiceImpl implements IPoetryArticleService
         }
         return ztrees;
     }
+
+    @Override
+    public Long getMaxKeyId() {
+        return poetryArticleMapper.getMaxKeyId();
+    }
 }

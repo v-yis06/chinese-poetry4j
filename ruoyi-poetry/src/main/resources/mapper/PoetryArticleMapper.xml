@@ -41,7 +41,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join poetry_article p on p.id = t.parent_id
         where t.id = #{id}
     </select>
-        
+    <select id="getMaxKeyId" resultType="java.lang.Long">
+        SELECT max(id) FROM poetry_article
+    </select>
+
     <insert id="insertPoetryArticle" parameterType="PoetryArticle" useGeneratedKeys="true" keyProperty="id">
         insert into poetry_article
         <trim prefix="(" suffix=")" suffixOverrides=",">

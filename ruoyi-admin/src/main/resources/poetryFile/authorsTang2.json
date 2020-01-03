@@ -1,0 +1,8 @@
+[
+//  Incorrect string value: '\xF0\xA4\xA4\xBA' for column 'name' at row 1835,
+  {
+    "desc": "車𬘔，貞元進士。詩一首。",
+    "name": "車𬘔",
+    "id": "4ed10e80-5435-475c-928f-5d124bb96033"
+  }
+]
