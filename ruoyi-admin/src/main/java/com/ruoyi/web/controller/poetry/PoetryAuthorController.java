@@ -138,31 +138,29 @@ public class PoetryAuthorController extends BaseController
     @ResponseBody
     public AjaxResult authorImport(@RequestParam("file") MultipartFile multipartFile)
     {
+        int insertNum = 0;
+        JSONFilePoetry jsonFilePoetry = new JSONFilePoetry();
         try {
-
             // 将文件缓存到服务器，然后获取解析
-            JSONFilePoetry jsonFilePoetry = new JSONFilePoetry();
             JSONArray jsonArray = jsonFilePoetry.readJsonData(multipartFile);
             List<PoetryAuthor> poetryAuthors = jsonArray.toJavaList(PoetryAuthor.class);
             // 说明：json文件部分字符存在乱码问题
 //            int num = poetryAuthorService.batchInsertPoetryAuthor(poetryAuthors);
-            int num = 0;
             for (PoetryAuthor poetryAuthor : poetryAuthors) {
                 try {
                     poetryAuthor.setCreateBy("admin");
                     int retNum = poetryAuthorService.insertPoetryAuthor(poetryAuthor);
                     if(retNum>0){
-                        num++;
+                        insertNum++;
                     }
                 }catch (Exception e){
                     logger.error("作者新增异常："+e.getMessage());
                 }
             }
-            System.out.println("导入json新增作者数量："+num);
         } catch (IOException e) {
             e.printStackTrace();
             return AjaxResult.error(e.getMessage());
         }
-        return new AjaxResult();
+        return new AjaxResult(AjaxResult.Type.SUCCESS,"导入json新增作者数量："+insertNum);
     }
 }

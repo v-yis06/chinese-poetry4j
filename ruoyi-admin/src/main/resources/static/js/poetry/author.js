@@ -48,7 +48,7 @@ layui.use(['element','upload'], function () {
 
     //上传
     upload.render({
-        url: '/poetry/author/authorImport/'
+        url: ctx+'poetry/author/authorImport/'
         ,elem: '#authorImport'
         ,accept: 'file'
         ,drag: true

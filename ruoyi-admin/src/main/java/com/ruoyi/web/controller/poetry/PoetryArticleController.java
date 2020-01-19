@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.poetry;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.google.common.collect.Lists;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -213,30 +215,29 @@ public class PoetryArticleController extends BaseController
     @ResponseBody
     public AjaxResult articleImport(@RequestParam("file") MultipartFile multipartFile)
     {
+        Integer insertNum = 0;
+        JSONFilePoetry jsonFile = new JSONFilePoetry();
         try {
-            JSONFilePoetry jsonFile = new JSONFilePoetry();
             JSONArray jsonArray = jsonFile.readJsonData(multipartFile);
-            // 获取最大主键值
-            Long maxId = poetryArticleService.getMaxKeyId();
-            maxId = maxId==null ? 1 : maxId;
-            Integer insertNum = 0;
             for (Object obj : jsonArray) {
                 try {
+                    // 获取最大主键值
+                    Long maxId = poetryArticleService.getMaxKeyId();
+                    maxId = maxId==null ? 1 : maxId;
 
+                    // 数据写表
                     InsertCell insertCell = new InsertCell(maxId, insertNum, (Map) obj).invoke();
-                    maxId = insertCell.getMaxId();
                     insertNum = insertCell.getInsertNum();
                 }catch (Exception e){
                     logger.error(e.getMessage());
                 }
             }
-            System.out.println("json文件导入诗文数量："+insertNum);
 
         } catch (IOException e) {
             e.printStackTrace();
             return AjaxResult.error(e.getMessage());
         }
-        return new AjaxResult();
+        return new AjaxResult(AjaxResult.Type.SUCCESS,"json文件导入诗文数量："+insertNum);
     }
 
     private class InsertCell {
@@ -286,4 +287,10 @@ public class PoetryArticleController extends BaseController
             return this;
         }
     }
+
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String str = ZhConverterUtil.convertToSimple("弄篙莫濺水，畏濕紅蓮衣。");
+        System.out.println(str);
+    }
 }
+

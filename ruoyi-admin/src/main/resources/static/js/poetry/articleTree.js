@@ -76,7 +76,7 @@ layui.use(['element','upload'], function () {
 
     //上传
     upload.render({
-        url: '/poetry/article/articleImport/'
+        url: prefix+'/articleImport/'
         ,elem: '#articleImport'
         ,accept: 'file'
         ,drag: true
