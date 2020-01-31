@@ -37,8 +37,32 @@ public class PoetryArticleServiceImpl implements IPoetryArticleService
     }
 
     /**
+     * 根据条件随机获取一首诗文
+     * @return
+     */
+    @Override
+    public List<PoetryArticle> selectRandPoetryArticleTree(PoetryArticle req)
+    {
+        PoetryArticle poetryArticleRand = poetryArticleMapper.selectRandPoetryArticle(req);
+        if(poetryArticleRand==null){
+            return null;
+        }
+        Long parentId;
+        if(poetryArticleRand.getParentId().equals(0)){
+            parentId = poetryArticleRand.getId();
+        }else {
+            parentId = poetryArticleRand.getParentId();
+        }
+
+        PoetryArticle treeQuery = new PoetryArticle();
+        treeQuery.setParentId(parentId);
+        return poetryArticleMapper.selectPoetryArticleTreeList(treeQuery);
+
+    }
+
+    /**
      * 查询诗词文章列表
-     * 
+     *
      * @param poetryArticle 诗词文章
      * @return 诗词文章
      */

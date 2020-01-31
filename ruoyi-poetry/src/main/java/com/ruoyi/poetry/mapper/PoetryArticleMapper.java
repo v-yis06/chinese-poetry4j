@@ -28,6 +28,8 @@ public interface PoetryArticleMapper
      */
     public List<PoetryArticle> selectPoetryArticleTreeList(PoetryArticle poetryArticle);
 
+    public PoetryArticle selectRandPoetryArticle(PoetryArticle poetryArticle);
+
     /**
      * 查询诗词文章列表
      *

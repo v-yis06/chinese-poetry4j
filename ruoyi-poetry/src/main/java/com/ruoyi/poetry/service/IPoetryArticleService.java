@@ -21,6 +21,8 @@ public interface IPoetryArticleService
      */
     public PoetryArticle selectPoetryArticleById(Long id);
 
+    List<PoetryArticle> selectRandPoetryArticleTree(PoetryArticle poetryArticle);
+
     /**
      * 查询诗词文章列表
      * 

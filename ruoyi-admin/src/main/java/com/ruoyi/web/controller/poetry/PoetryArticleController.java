@@ -21,11 +21,11 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -60,8 +60,21 @@ public class PoetryArticleController extends BaseController
     @ResponseBody
     public TableDataInfo list(PoetryArticle poetryArticle)
     {
+        String reqContent = poetryArticle.getContent();
+        String reqAuthor = poetryArticle.getAuthor();
+        if(StringUtils.isNotEmpty(reqContent)){
+            poetryArticle.setContent(ZhConverterUtil.convertToTraditional(reqContent));
+        }
+        if(StringUtils.isNotEmpty(reqAuthor)){
+            poetryArticle.setAuthor(ZhConverterUtil.convertToTraditional(reqAuthor));
+        }
+
         startPage();
         List<PoetryArticle> list = poetryArticleService.selectPoetryArticleList(poetryArticle);
+        for (PoetryArticle article : list) {
+            article.setAuthor(ZhConverterUtil.convertToSimple(article.getAuthor()));
+            article.setContent(ZhConverterUtil.convertToSimple(article.getContent()));
+        }
         return getDataTable(list);
     }
 
@@ -105,7 +118,21 @@ public class PoetryArticleController extends BaseController
     @ResponseBody
     public List<PoetryArticle> listTree(PoetryArticle poetryArticle)
     {
+
+        String reqContent = poetryArticle.getContent();
+        String reqAuthor = poetryArticle.getAuthor();
+        if(StringUtils.isNotEmpty(reqContent)){
+            poetryArticle.setContent(ZhConverterUtil.convertToTraditional(reqContent));
+        }
+        if(StringUtils.isNotEmpty(reqAuthor)){
+            poetryArticle.setAuthor(ZhConverterUtil.convertToTraditional(reqAuthor));
+        }
+
         List<PoetryArticle> list = poetryArticleService.selectPoetryArticleTreeList(poetryArticle);
+        for (PoetryArticle article : list) {
+            article.setAuthor(ZhConverterUtil.convertToSimple(article.getAuthor()));
+            article.setContent(ZhConverterUtil.convertToSimple(article.getContent()));
+        }
         return list;
     }
 
@@ -203,6 +230,19 @@ public class PoetryArticleController extends BaseController
     public List<Ztree> treeData()
     {
         List<Ztree> ztrees = poetryArticleService.selectPoetryArticleTree();
+        if(CollectionUtils.isEmpty(ztrees)){
+            return null;
+        }
+        for (Ztree article : ztrees) {
+            String name = article.getName();
+            String title = article.getTitle();
+            if(StringUtils.isNotEmpty(name)){
+                article.setName(ZhConverterUtil.convertToSimple(name));
+            }
+            if(StringUtils.isNotEmpty(title)){
+                article.setTitle(ZhConverterUtil.convertToSimple(title));
+            }
+        }
         return ztrees;
     }
 
@@ -288,9 +328,5 @@ public class PoetryArticleController extends BaseController
         }
     }
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        String str = ZhConverterUtil.convertToSimple("弄篙莫濺水，畏濕紅蓮衣。");
-        System.out.println(str);
-    }
 }
 

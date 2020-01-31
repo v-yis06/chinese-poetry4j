@@ -53,8 +53,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join poetry_article p on p.id = t.parent_id
         where t.id = #{id}
     </select>
+
     <select id="getMaxKeyId" resultType="java.lang.Long">
         SELECT max(id) FROM poetry_article
+    </select>
+
+    <select id="selectRandPoetryArticle" resultMap="PoetryArticleResult">
+        <include refid="selectPoetryArticleVo"/>
+        <where>
+            <if test="parentId != null "> and (parent_id = #{parentId} or id = #{parentId})</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="params.beginOrderNum != null and params.beginOrderNum != '' and params.endOrderNum != null and params.endOrderNum != ''"> and order_num between #{params.beginOrderNum} and #{params.endOrderNum}</if>
+            <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+        order by RAND(current_date)
+        limit 1
     </select>
 
     <insert id="insertPoetryArticle" parameterType="PoetryArticle" useGeneratedKeys="true" keyProperty="id">
