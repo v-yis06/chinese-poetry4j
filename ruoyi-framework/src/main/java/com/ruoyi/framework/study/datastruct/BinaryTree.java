@@ -1,4 +1,4 @@
-package com.ruoyi.framework.study.algorithm;
+package com.ruoyi.framework.study.datastruct;
 
 /**
  * @auther 易胜
