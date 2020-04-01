@@ -26,7 +26,6 @@ import java.util.List;
 @RequestMapping("/system/qrcode")
 public class QrCodeFileController {
 
-
     /**
      * 二维码管理
      */
