@@ -230,5 +230,4 @@ public class QrCodeUtil {
         String rootPath = "/Users/eason/Desktop" + File.separator + "tmp";
         generateIceQrFiles(qrCodeList, rootPath, deptId);
     }
-
 }
