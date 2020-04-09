@@ -8,12 +8,12 @@ package com.ruoyi.framework.study.datastruct;
 public class LinkList {
 
     public static class LinkNode {
-        String data;
+        Object data;
         LinkNode nextLinkNode;
         LinkNode(){
 
         }
-        LinkNode(String data){
+        LinkNode(Object data){
             this.data = data;
             this.nextLinkNode = null;
         }
@@ -33,17 +33,9 @@ public class LinkList {
 
     LinkList initLinkList(){
         LinkList linkList = new LinkList();
-        LinkNode root = new LinkNode("A");
-        LinkNode linkNode1 = new LinkNode("B");
-        LinkNode linkNode2 = new LinkNode("C");
-        LinkNode linkNode3 = new LinkNode("D");
-        LinkNode linkNode4 = new LinkNode("E");
-        root.nextLinkNode = linkNode1;
-        linkNode1.nextLinkNode = linkNode2;
-        linkNode2.nextLinkNode = linkNode3;
-        linkNode3.nextLinkNode = linkNode4;
+        LinkNode root = new LinkNode();
         linkList.root = root;
-        linkList.size = 5;
+        linkList.size = 0;
 
         return linkList;
     }
@@ -106,6 +98,18 @@ public class LinkList {
         LinkNode pDel = pCurrent.nextLinkNode;
         pCurrent.nextLinkNode = pDel.nextLinkNode;
         linkList.size--;
+    }
+
+    // 返回栈顶元素
+    LinkNode getTop(LinkList linkList){
+        if(linkList==null){
+            return null;
+        }
+        LinkNode currentNode = linkList.root;
+        while (currentNode.nextLinkNode!=null){
+            currentNode = currentNode.nextLinkNode;
+        }
+        return currentNode;
     }
 
     /**
