@@ -4,6 +4,7 @@ package com.ruoyi.framework.study.datastruct;
  * @auther 易胜
  * @date 2020-03-26
  * @desc
+ *  TODO: 用栈结构存储分别实现单递归操作和多递归操作
  */
 public class BinaryTree {
 
@@ -150,16 +151,16 @@ public class BinaryTree {
         System.out.print("recursion: ");
         binaryTree.recursion(root);
         // 叶子节点数目
-        System.out.println();
-        binaryTree.caculateLeafCount(root);
-        System.out.println("leafCount: "+binaryTree.leafCount);
-        // 计算树的高度
-        System.out.println("caculateLevelCount: "+binaryTree.caculateLevelCount(root));
-        // 拷贝（释放）
-        Node newRoot = binaryTree.copyBinaryTree(root);
-        System.out.println("newRoot:");
-        System.out.print("recursion: ");
-        binaryTree.recursion(root);
+//        System.out.println();
+//        binaryTree.caculateLeafCount(root);
+//        System.out.println("leafCount: "+binaryTree.leafCount);
+//        // 计算树的高度
+//        System.out.println("caculateLevelCount: "+binaryTree.caculateLevelCount(root));
+//        // 拷贝（释放）
+//        Node newRoot = binaryTree.copyBinaryTree(root);
+//        System.out.println("newRoot:");
+//        System.out.print("recursion: ");
+//        binaryTree.recursion(root);
 
     }
 
