@@ -72,9 +72,7 @@ public class StackSequence {
             System.out.println("空栈");
         }else {
             List<Object> list = stackSequence.data;
-            for (Object obj : list) {
-                System.out.println(obj.toString());
-            }
+            System.out.println(list.toString());
         }
 
     }

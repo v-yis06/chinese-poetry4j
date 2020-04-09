@@ -61,8 +61,10 @@ public class StackLink {
         stackLink.push(stack,new LinkList.LinkNode(1));
         stackLink.push(stack,new LinkList.LinkNode(2));
         stackLink.push(stack,new LinkList.LinkNode(3));
-        stackLink.push(stack,new LinkList.LinkNode(4));
         stackLink.pop(stack);
+        stackLink.pop(stack);
+        stackLink.push(stack,new LinkList.LinkNode(4));
+        stackLink.push(stack,new LinkList.LinkNode(5));
 
         stackLink.print(stack);
     }
