@@ -34,7 +34,13 @@ public class StackLink {
 
     // 出栈
     void pop(StackLink stackLink){
+        if(stackLink==null){
+            return;
+        }
         LinkList linkList = stackLink.linkList;
+        if(linkList.size==0){
+            return;
+        }
         linkList.removeLinkList(linkList,linkList.size-1);
         stackLink.size--;
     }
